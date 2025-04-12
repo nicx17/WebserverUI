@@ -1,10 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Pi Page</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Animated Gauge</title>
+  <style>
+    body {
+      background: #1e1e2f;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .gauge-container {
+      position: relative;
+      width: 250px;
+      height: 125px;
+    }
+
+    .gauge {
+      width: 100%;
+      height: 100%;
+    }
+
+    .gauge circle {
+      fill: none;
+      stroke-width: 20;
+      stroke-linecap: round;
+    }
+
+    .bg {
+      stroke: #2e2e40;
+    }
+
+    .meter {
+      stroke: #00e0ff;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      transition: stroke-dashoffset 1s ease;
+    }
+
+    .label {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 40%;
+      font-size: 1.5em;
+    }
+
+    .label span {
+      color: #00e0ff;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello from Raspberry Pi Zero!</h1>
-  <p>This is my local page.</p>
+
+  <div class="gauge-container">
+    <svg class="gauge" viewBox="0 0 100 50">
+      <circle class="bg" cx="50" cy="50" r="40" stroke-dasharray="126" stroke-dashoffset="0" />
+      <circle class="meter" cx="50" cy="50" r="40" stroke-dasharray="126" stroke-dashoffset="126" />
+    </svg>
+    <div class="label">Speed: <span id="value">0</span>%</div>
+  </div>
+
+  <script>
+    const meter = document.querySelector('.meter');
+    const valueLabel = document.getElementById('value');
+    const max = 100;
+    const circumference = 126; // half circle approx (π * diameter / 2)
+
+    let value = 0;
+
+    function updateGauge(val) {
+      val = Math.max(0, Math.min(val, max)); // clamp
+      const offset = circumference - (val / max) * circumference;
+      meter.style.strokeDashoffset = offset;
+      valueLabel.textContent = val;
+    }
+
+    // Animate the gauge with a demo value
+    let current = 0;
+    setInterval(() => {
+      current = (current + 5) % 105;
+      updateGauge(current);
+    }, 1000);
+  </script>
+
 </body>
 </html>
