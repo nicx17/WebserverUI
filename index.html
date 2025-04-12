@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pi Zero Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/raphael@2.3.0/raphael.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/justgage@1.3.5/justgage.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #1e1e1e;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    #gauge {
+      width: 200px;
+      height: 160px;
+      display: inline-block;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="fade-in">Raspberry Pi Zero Dashboard</h1>
+  <div id="gauge" class="fade-in" style="animation-delay: 0.5s;"></div>
+
+  <script>
+    const g = new JustGage({
+      id: "gauge",
+      value: 42,
+      min: 0,
+      max: 100,
+      title: "CPU Load"
+    });
+
+    // Optional: update gauge every 2 seconds
+    setInterval(() => {
+      g.refresh(Math.floor(Math.random() * 100));
+    }, 2000);
+  </script>
+
+</body>
+</html>
+
