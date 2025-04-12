@@ -3,92 +3,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Animated Gauge</title>
+  <title>Gauge</title>
   <style>
     body {
-      background: #1e1e2f;
-      color: #fff;
+      margin: 0;
+      background-color: #121212;
       font-family: 'Segoe UI', sans-serif;
+      color: #fff;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      margin: 0;
     }
 
-    .gauge-container {
+    .gauge-wrapper {
       position: relative;
-      width: 250px;
-      height: 125px;
+      width: 300px;
+      height: 300px;
     }
 
-    .gauge {
-      width: 100%;
-      height: 100%;
+    .gauge-svg {
+      transform: rotate(-90deg);
     }
 
-    .gauge circle {
+    .gauge-bg,
+    .gauge-meter {
       fill: none;
       stroke-width: 20;
       stroke-linecap: round;
     }
 
-    .bg {
-      stroke: #2e2e40;
+    .gauge-bg {
+      stroke: #333;
     }
 
-    .meter {
+    .gauge-meter {
       stroke: #00e0ff;
-      transform: rotate(-90deg);
-      transform-origin: center;
       transition: stroke-dashoffset 1s ease;
     }
 
-    .label {
+    .gauge-label {
       position: absolute;
       width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
       text-align: center;
-      top: 40%;
-      font-size: 1.5em;
+      font-size: 2em;
+      font-weight: bold;
     }
 
-    .label span {
+    .gauge-label span {
       color: #00e0ff;
-      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <div class="gauge-container">
-    <svg class="gauge" viewBox="0 0 100 50">
-      <circle class="bg" cx="50" cy="50" r="40" stroke-dasharray="126" stroke-dashoffset="0" />
-      <circle class="meter" cx="50" cy="50" r="40" stroke-dasharray="126" stroke-dashoffset="126" />
+  <div class="gauge-wrapper">
+    <svg class="gauge-svg" viewBox="0 0 200 200">
+      <circle class="gauge-bg" cx="100" cy="100" r="80" />
+      <circle class="gauge-meter" cx="100" cy="100" r="80"
+        stroke-dasharray="502.65"
+        stroke-dashoffset="502.65" />
     </svg>
-    <div class="label">Speed: <span id="value">0</span>%</div>
+    <div class="gauge-label">Speed: <span id="gauge-value">0</span>%</div>
   </div>
 
   <script>
-    const meter = document.querySelector('.meter');
-    const valueLabel = document.getElementById('value');
-    const max = 100;
-    const circumference = 126; // half circle approx (π * diameter / 2)
+    const meter = document.querySelector('.gauge-meter');
+    const label = document.getElementById('gauge-value');
+    const circumference = 2 * Math.PI * 80;
+    const maxValue = 100;
+    let currentValue = 0;
 
-    let value = 0;
-
-    function updateGauge(val) {
-      val = Math.max(0, Math.min(val, max)); // clamp
-      const offset = circumference - (val / max) * circumference;
+    function setGauge(value) {
+      const clamped = Math.max(0, Math.min(value, maxValue));
+      const offset = circumference - (clamped / maxValue) * circumference;
       meter.style.strokeDashoffset = offset;
-      valueLabel.textContent = val;
+      label.textContent = clamped;
     }
 
-    // Animate the gauge with a demo value
-    let current = 0;
+    // Animate as a demo
     setInterval(() => {
-      current = (current + 5) % 105;
-      updateGauge(current);
+      currentValue = (currentValue + 10) % 110;
+      setGauge(currentValue);
     }, 1000);
   </script>
 
