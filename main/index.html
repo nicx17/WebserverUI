@@ -68,38 +68,39 @@
     </svg>
     <div class="gauge-label">Speed: <span id="gauge-value">0</span>%</div>
   </div>
-
+  
   <script>
     const meter = document.querySelector('.gauge-meter');
     const label = document.getElementById('gauge-value');
     const circumference = 2 * Math.PI * 80;
     const maxValue = 100;
-
+  
     function setGauge(value) {
       const clamped = Math.max(0, Math.min(value, maxValue));
       const offset = circumference - (clamped / maxValue) * circumference;
-      meter.style.strokeDashoffset = offset;
-      label.textContent = clamped;
+      meter.style.strokeDashoffset = offset.toFixed(2); // Better animation performance
+      label.textContent = clamped.toFixed(1); // 1 decimal precision
     }
-
-    function fetchValue() {
-      fetch("ramdisk/data.txt?time=" + Date.now())
-
-        .then(response => response.text())
-        .then(data => {
-          const parsed = parseFloat(data.trim());
-          if (!isNaN(parsed)) {
-            setGauge(parsed);
-          }
-        })
-        .catch(error => {
-          console.error("Failed to fetch value:", error);
-        });
+  
+    async function fetchValue() {
+      try {
+        const response = await fetch("ramdisk/data.txt?cachebuster=" + Date.now(), { cache: "no-store" });
+        const raw = await response.text();
+        const parsed = parseFloat(raw.trim());
+  
+        if (!isNaN(parsed)) {
+          setGauge(parsed);
+        } else {
+          console.warn("Invalid data:", raw);
+        }
+      } catch (error) {
+        console.error("Failed to fetch value:", error);
+      }
     }
-
-    // Fetch every 2 seconds
-    setInterval(fetchValue, 2000);
-    fetchValue(); // Initial call
+  
+    // Fetch every 200ms (5 times per second)
+    setInterval(fetchValue, 200);
+    fetchValue(); // Initial fetch
   </script>
 
 </body>
