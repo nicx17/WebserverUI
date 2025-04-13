@@ -83,7 +83,8 @@
     }
 
     function fetchValue() {
-      fetch("data.txt")
+      fetch("ramdisk/data.txt?time=" + Date.now())
+
         .then(response => response.text())
         .then(data => {
           const parsed = parseFloat(data.trim());
