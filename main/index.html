@@ -68,7 +68,7 @@
     </svg>
     <div class="gauge-label">Speed: <span id="gauge-value">0</span>%</div>
   </div>
-  
+
   <script>
     const meter = document.querySelector('.gauge-meter');
     const label = document.getElementById('gauge-value');
@@ -99,7 +99,7 @@
     }
   
     // Fetch every 200ms (5 times per second)
-    setInterval(fetchValue, 200);
+    setInterval(fetchValue, 90);
     fetchValue(); // Initial fetch
   </script>
 
